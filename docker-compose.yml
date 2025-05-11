@@ -1,0 +1,18 @@
+services:
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_USER: bstack_user
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: bstack_db
+      MARIADB_ROOT_PASSWORD: password
+    ports:
+      - 3306:3306
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
