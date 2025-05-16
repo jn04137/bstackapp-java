@@ -1,7 +1,5 @@
 package com.bstack.bstackapp.controllers;
 
-import org.apache.catalina.User;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +18,7 @@ import com.bstack.bstackapp.models.UserAccount;
 import com.bstack.bstackapp.repositories.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class LoginController {
@@ -45,12 +45,14 @@ public class LoginController {
 			Authentication auth = authenticationManager.authenticate(token);
 			SecurityContextHolder.getContext().setAuthentication(auth);
 
+			HttpSession session = httpRequest.getSession(true);
+			session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+
 			httpRequest.getSession(true);
+			return ResponseEntity.ok("Login successful");
 		} catch(AuthenticationException ex) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials");
 		}
-
-		return ResponseEntity.ok("Login successful");
 	}
 
 	@PostMapping("/register")
