@@ -16,7 +16,7 @@ import jakarta.persistence.OneToMany;
 public class Team {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(unique = true, nullable = false, length = 72)
